@@ -1,0 +1,31 @@
+---
+
+- label: deploy-core-snapshot-source
+  type: create_stack
+  params:
+    template: snapshot-tool-source.yaml
+    stack_name: "{{ core.Project }}-{{ core.App }}-resources"
+    parameters:
+      ArtifactBucketName: "{{ core.ArtifactBucketName }}"
+      ArtifactKeyPrefix: "{{ core.ArtifactKeyPrefix }}"
+      AutomationBranchS3Prefix: "files/branch/{{ core.Portfolio }}/{{ core.App }}/{{ core.BranchShortName }}"
+      LambdaFunctionNamePrefix: "core-snapshot"
+    accounts:
+      - "234232"  # nonprod-auto
+    regions:
+      - ap-southeast-1  # Asia Pacific (Singapore)
+
+- label: deploy-core-snapshot-destination
+  type: create_stack
+  params:
+    template: snapshot-tool-dest.yaml
+    stack_name: "{{ core.Project }}-{{ core.App }}-resources"
+    parameters:
+      ArtifactBucketName: "{{ core.ArtifactBucketName }}"
+      ArtifactKeyPrefix: "{{ core.ArtifactKeyPrefix }}"
+      AutomationBranchS3Prefix: "files/branch/{{ core.Portfolio }}/{{ core.App }}/{{ core.BranchShortName }}"
+      LambdaFunctionNamePrefix: "core-snapshot"
+    accounts:
+      - "12321"  # Compliance account
+    regions:
+      - ap-southeast-1  # Asia Pacific (Singapore)
